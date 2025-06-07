@@ -1,6 +1,8 @@
-import './assets/main.css'
-
 import { createApp } from 'vue'
 import App from './App.vue'
+import Toolbar from 'primevue/toolbar';
 
-createApp(App).mount('#app')
+
+const app = createApp(App)
+    .component('pv-toolbar', Toolbar)
+    .mount('#app')
