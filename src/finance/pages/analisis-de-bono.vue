@@ -1,5 +1,6 @@
 <script setup>
 
+import FormularioParametros from "@/finance/components/formulario-parametros.vue";
 </script>
 
 <template>
@@ -8,6 +9,9 @@
     <h1>ANÁLISIS DE BONO</h1>
   </div>
 
+  <div class="formulario-entrada">
+    <formulario-parametros></formulario-parametros>
+  </div>
 
 </template>
 
