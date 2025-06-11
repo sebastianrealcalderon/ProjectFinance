@@ -7,9 +7,27 @@ const http = axios.create({
 })
 
 export class AuthApiService {
+
+    static  register(user){
+        console.log("Datos enviados para el registro:", user)
+        return http.post('/users', {
+                email: user.email,
+                password: user.password,
+                userType: user.userType
+        })
+            .then((res) => {
+                console.log("Respuesta del servidor:", res.data);
+                return res.data;
+            })
+            .catch((err) => {
+                console.error("Error al registrar usuario:", err);
+                throw new Error(err.message || "Hubo un error al registrar al usuario");
+            });
+    }
+
     login(email, password, userType) {
         return http.get('/users', {
-            params: {  // Los parámetros que buscamos en la consulta
+            params: {
                 email: email,
                 password: password,
                 userType: userType
@@ -17,8 +35,7 @@ export class AuthApiService {
         })
             .then(res => {
                 if (res.data.length > 0) {
-                    return res.data[0];  // Devuelve el primer usuario si la autenticación es exitosa
-                    console.log(res.data);
+                    return res.data[0];
                 } else {
                     console.error("Correo o contraseña incorrectos");
                 }

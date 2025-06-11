@@ -15,26 +15,48 @@ export default {
     };
   },
   methods: {
-    async handleLogin() {
-      try {
-        const apiAuthService = new AuthApiService();
-        const userData = await apiAuthService.login(this.email, this.password);
-        const user = userData ? userData : null;
+    async handleRegister() {
+      const newUser = new User({
+        email: this.email,
+        password: this.password,
+        userType: this.userType
+      });
 
-        if (user) {
-          if (user.userType === 'bonista') {
-            this.$router.push({ name: 'home' });
-          }else {
-            this.$router.push({ name: 'inversor' });
-          }
+      console.log("Nuevo usuario:", newUser);
+
+      if (!this.email || !this.password || !this.userType) {
+        console.error("Por favor, complete todos los campos.");
+        this.errorMessage = "Por favor, complete todos los campos.";
+        return;
+      }
+
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(this.email)) {
+        console.error("El email no es válido.");
+        this.errorMessage = "El email no es válido.";
+        return;
+      }
+
+      if (this.password.length < 6) {
+        console.error("La contraseña debe tener al menos 6 caracteres.");
+        this.errorMessage = "La contraseña debe tener al menos 6 caracteres.";
+        return;
+      }
+
+      try {
+
+        const response  = await AuthApiService.register(newUser);
+
+        if (response ) {
+          this.$router.push({ name: 'login' });
         } else {
-          this.errorMessage = "Correo o contraseña incorrectos.";
+          this.errorMessage = "Hubo un error al intentar registrarse.";
         }
       } catch (error) {
-        // En caso de error, mostramos el mensaje de error
-        this.errorMessage = error.message || 'Hubo un error al intentar iniciar sesión';
+        console.error("Error en el registro:", error);
+        this.errorMessage = error.message || "Hubo un error al intentar registrarse";
       }
-    },
+    }
   }
 };
 </script>
@@ -48,7 +70,7 @@ export default {
       </div>
       <div class="form-container">
         <h3>Crear una Cuenta</h3>
-        <form @submit.prevent="handleLogin">
+        <form @submit.prevent="handleRegister">
           <div class="p-field">
             <label for="email">Correo Electronico</label>
             <pv-inputText

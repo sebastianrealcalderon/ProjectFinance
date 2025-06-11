@@ -11,6 +11,12 @@
       "email": "camilo.adama@example.com",
       "password": "abcdef",
       "userType": "inversor"
+    },
+    {
+      "email": "lynn770450@gmail.com",
+      "password": "sleyder123",
+      "userType": "bonista",
+      "id": 3
     }
   ]
 }

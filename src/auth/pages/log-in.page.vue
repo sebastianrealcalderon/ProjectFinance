@@ -2,7 +2,6 @@
 
 <script>
 import {AuthApiService} from "@/auth/services/api-auth.service.js";
-import {User} from "@/auth/model/user.entity.js";
 
 export default {
   name: 'LoginComponent',
@@ -18,7 +17,7 @@ export default {
     async handleLogin() {
       try {
         const apiAuthService = new AuthApiService();
-        const userData = await apiAuthService.login(this.email, this.password);
+        const userData = await apiAuthService.login(this.email, this.password, this.userType);
         const user = userData ? userData : null;
 
         if (user) {
@@ -31,7 +30,6 @@ export default {
           this.errorMessage = "Correo o contraseña incorrectos.";
         }
       } catch (error) {
-        // En caso de error, mostramos el mensaje de error
         this.errorMessage = error.message || 'Hubo un error al intentar iniciar sesión';
       }
     },
@@ -82,7 +80,8 @@ export default {
             <pv-button type="submit" label="Log In" class="p-button p-button-primary" />
           </div>
           <p class="forgot-password">
-            ¿Olvidaste tu Contraseña? | ¿No tienes una Cuenta?
+            ¿No tienes una Cuenta?
+            <router-link to="/register">Regístrate aquí</router-link>
           </p>
         </form>
       </div>
