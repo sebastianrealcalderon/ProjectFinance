@@ -1,10 +1,16 @@
 {
   "users": [
     {
-      "id": "",
-      "username": "",
-      "password": "",
-      "role": ""
+      "id": 1,
+      "email": "kevin.muto@example.com",
+      "password": "123456",
+      "userType": "bonista"
+    },
+    {
+      "id": 2,
+      "email": "camilo.adama@example.com",
+      "password": "abcdef",
+      "userType": "inversor"
     }
   ]
 }
