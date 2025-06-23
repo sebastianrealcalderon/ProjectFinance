@@ -2,9 +2,21 @@
   "users": [
     {
       "id": 1,
-      "username": "",
-      "password": "",
-      "role": ""
+      "email": "kevin.muto@example.com",
+      "password": "123456",
+      "userType": "bonista"
+    },
+    {
+      "id": 2,
+      "email": "camilo.adama@example.com",
+      "password": "abcdef",
+      "userType": "inversor"
+    },
+    {
+      "email": "lynn770450@gmail.com",
+      "password": "sleyder123",
+      "userType": "bonista",
+      "id": 3
     }
   ]
 }
