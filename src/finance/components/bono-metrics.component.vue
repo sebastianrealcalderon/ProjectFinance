@@ -1,4 +1,5 @@
 <script>
+
 export default {
   name: "bono-metrics",
   props: {
@@ -16,7 +17,7 @@ export default {
   methods: {
     selectView(view) {
       this.view = view;
-    }
+    },
   }
 };
 </script>
@@ -31,8 +32,8 @@ export default {
       <button @click="selectView('metrics')">Métricas del Bono</button>
     </div>
 
-    <!-- Mostrar flujo de caja -->
-    <div v-if="view === 'flujoCaja' && bono.outputData?.flujoCaja?.length > 0" class="flujo-caja">
+    <!-- Mostrar flujo de caja solo si bono.outputData y bono.outputData.flujoCaja están disponibles -->
+    <div v-if="view === 'flujoCaja' && bono.outputData && bono.outputData.flujoCaja && bono.outputData.flujoCaja.length > 0">
       <h3>Flujo de Caja</h3>
       <table class="table">
         <thead>
@@ -63,8 +64,8 @@ export default {
       </div>
     </div>
 
-    <!-- Mostrar métricas del bono -->
-    <div v-else-if="view === 'metrics'" class="metrics">
+    <!-- Mostrar métricas del bono solo si bono.outputData está definido -->
+    <div v-if="view === 'metrics' && bono.outputData">
       <h3>Métricas del Bono</h3>
       <div class="metric">
         <strong>Cuota Constante:</strong> {{ bono.outputData.cuotaConstante.toFixed(2) }}
@@ -96,8 +97,10 @@ export default {
     <div v-else>
       <p>No hay datos disponibles. Por favor, ingrese todos los datos en el formulario.</p>
     </div>
+
   </div>
 </template>
+
 
 <style scoped>
 .metrics-container {

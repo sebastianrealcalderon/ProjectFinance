@@ -45,8 +45,26 @@ export default {
     },
     newBonoButton(){
       this.$router.push('/analisis-bono');
-    }
-
+    },
+    eliminarBono(id){
+      const bonoService = new BonoApiService();
+      bonoService.deleteBono(id)
+          .then(response => {
+            console.log("Bono eliminado correctamente:", response);
+            // Después de eliminar, actualizamos la lista de bonos
+            this.getBonos();
+            alert("Bono eliminado correctamente.");
+          })
+          .catch(error => {
+            console.log("Error al eliminar el bono", error);
+            alert("Hubo un error al eliminar el bono.");
+          });
+    },
+    actualizarBono(bono) {
+      // Esta función se llama cuando se desea editar el bono
+      // Debes mostrar el formulario de edición con los datos del bono
+      this.$router.push({ name: 'analisis-bono', params: { bono: bono } });
+    },
   }
 }
 </script>
@@ -86,7 +104,7 @@ export default {
         <td>{{ bono.outputData?.tcea }}</td>
         <td>
           <!-- Aquí puedes agregar botones para editar y eliminar -->
-          <button @click="editarBono(bono.id)">Editar</button>
+          <button @click="actualizarBono(bono)">Editar</button>
           <button @click="eliminarBono(bono.id)">Eliminar</button>
         </td>
       </tr>

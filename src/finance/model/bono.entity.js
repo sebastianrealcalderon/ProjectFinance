@@ -50,13 +50,15 @@ export class Bono{
 
         // Datos de salida con defaults
         this.outputData = {
-            flujoCaja: outputData.flujoCaja || [],
+            cuotaConstante:outputData.cuotaConstante || 0.0,
+            tablaAmortizacion:outputData.tablaAmortizacion||0.0,
             tcea: outputData.tcea || null,
             trea: outputData.trea || null,
             convexidad: outputData.convexidad || null,
             duration: outputData.duration || null,
             duracionModificada: outputData.duracionModificada || null,
-            precioMaximoMercado: outputData.precioMaximoMercado || null
+            precioMaximoMercado: outputData.precioMaximoMercado || null,
+            flujoCaja: outputData.flujoCaja || [],
         };
     }
 }
