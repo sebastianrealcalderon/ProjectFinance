@@ -7,9 +7,8 @@ export default {
   name: 'LoginComponent',
   data() {
     return {
-      fullName: '',
+      email: '',
       password: '',
-      userType: '',
       errorMessage: ''
     };
   },
@@ -17,14 +16,16 @@ export default {
     async handleLogin() {
       try {
         const apiAuthService = new AuthApiService();
-        const userData = await apiAuthService.login(this.email, this.password, this.userType);
+        const userData = await apiAuthService.login(this.email, this.password);
         const user = userData ? userData : null;
 
         if (user) {
-          if (user.userType === 'bonista') {
-            this.$router.push({ name: 'home' });
+          console.log(user);
+          localStorage.setItem("user", JSON.stringify(user));
+          if (user.role === 'emisor') {
+            this.$router.push({ name: 'emisorBonoList' });
           }else {
-            this.$router.push({ name: 'inversor' });
+            this.$router.push({ name: 'analisis-bono' });
           }
         } else {
           this.errorMessage = "Correo o contraseña incorrectos.";
@@ -52,7 +53,7 @@ export default {
             <pv-inputText
                 id="fullName"
                 type="text"
-                v-model="fullName"
+                v-model="email"
                 class="p-inputText p-component"
                 placeholder="Email"
                 required
@@ -69,13 +70,13 @@ export default {
                 required
             />
           </div>
-          <div class="p-field">
+         <!-- <div class="p-field">
             <label for="userType">Tipo de usuario</label>
             <select v-model="userType" class="p-inputText p-component">
               <option value="bonista">Bonista</option>
               <option value="inversor">Inversor</option>
             </select>
-          </div>
+          </div>-->
           <div class="p-d-flex p-jc-between">
             <pv-button type="submit" label="Log In" class="p-button p-button-primary" />
           </div>

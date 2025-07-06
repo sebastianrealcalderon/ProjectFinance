@@ -4,19 +4,209 @@
       "id": 1,
       "email": "kevin.muto@example.com",
       "password": "123456",
-      "userType": "bonista"
+      "role": "bonista"
     },
     {
       "id": 2,
+      "firstName": "Camilo",
+      "lastName": "Adama",
       "email": "camilo.adama@example.com",
       "password": "abcdef",
-      "userType": "inversor"
+      "role": "emisor"
     },
     {
       "email": "lynn770450@gmail.com",
       "password": "sleyder123",
-      "userType": "bonista",
+      "role": "bonista",
       "id": 3
+    }
+  ],
+  "bonos": [
+    {
+      "id": 1,
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Construcción Lima",
+        "valorNominal": 1000,
+        "valorComercial": 950,
+        "moneda": "PEN",
+        "nroPeriodos": 12,
+        "frecuenciaPago": "MENSUAL",
+        "tipoTasa": "NOMINAL",
+        "tasaInteres": 0.08,
+        "capitalizacion": "Mensual",
+        "plazoGraciaTotal": 0,
+        "plazoGraciaParcial": 0,
+        "fechaEmision": "2025-07-01",
+        "gastosIniciales": 20,
+        "gastosFinales": 15,
+        "impuestoRenta": 0.05
+      },
+      "outputData": {
+        "flujoCaja": [],
+        "tcea": 0.084,
+        "trea": 0.078,
+        "convexidad": 4.5,
+        "duration": 11,
+        "duracionModificada": 10.5,
+        "precioMaximoMercado": 980
+      }
+    },
+    {
+      "id": 2,
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Energía Solar",
+        "valorNominal": 5000,
+        "valorComercial": 4700,
+        "moneda": "USD",
+        "nroPeriodos": 24,
+        "frecuenciaPago": "TRIMESTRAL",
+        "tipoTasa": "EFECTIVA",
+        "tasaInteres": 0.1,
+        "capitalizacion": null,
+        "plazoGraciaTotal": 0,
+        "plazoGraciaParcial": 2,
+        "fechaEmision": "2025-06-20",
+        "gastosIniciales": 50,
+        "gastosFinales": 30,
+        "impuestoRenta": 0.06
+      },
+      "outputData": {
+        "flujoCaja": [],
+        "tcea": 0.102,
+        "trea": 0.095,
+        "convexidad": 6.3,
+        "duration": 21,
+        "duracionModificada": 20,
+        "precioMaximoMercado": 4950
+      }
+    },
+    {
+      "id": 3,
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Expansión Industrial",
+        "valorNominal": 2000,
+        "valorComercial": 1900,
+        "moneda": "USD",
+        "nroPeriodos": 36,
+        "frecuenciaPago": "MENSUAL",
+        "tipoTasa": "NOMINAL",
+        "tasaInteres": 0.07,
+        "capitalizacion": "Trimestral",
+        "plazoGraciaTotal": 3,
+        "plazoGraciaParcial": 0,
+        "fechaEmision": "2025-05-15",
+        "gastosIniciales": 25,
+        "gastosFinales": 15,
+        "impuestoRenta": 0.04
+      },
+      "outputData": {
+        "flujoCaja": [],
+        "tcea": 0.075,
+        "trea": 0.07,
+        "convexidad": 5.8,
+        "duration": 33,
+        "duracionModificada": 31,
+        "precioMaximoMercado": 1980
+      }
+    },
+    {
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Expansión Industrial",
+        "valorNominal": 2000,
+        "valorComercial": 1950,
+        "moneda": "USD",
+        "nroPeriodos": 36,
+        "frecuenciaPago": "MENSUAL",
+        "tipoTasa": "NOMINAL",
+        "tasaInteres": 7,
+        "capitalizacion": "Trimestral",
+        "plazoGraciaTotal": 3,
+        "plazoGraciaParcial": 0,
+        "fechaEmision": "2025-07-01",
+        "gastosIniciales": 25,
+        "gastosFinales": 15,
+        "impuestoRenta": 4
+      },
+      "id": 4
+    },
+    {
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Expansión Industrial",
+        "valorNominal": 2000,
+        "valorComercial": 1950,
+        "moneda": "PEN",
+        "nroPeriodos": 36,
+        "frecuenciaPago": "MENSUAL",
+        "tipoTasa": "EFECTIVA",
+        "tasaInteres": 7,
+        "capitalizacion": "Anual",
+        "plazoGraciaTotal": 3,
+        "plazoGraciaParcial": 0,
+        "fechaEmision": "2025-07-06",
+        "gastosIniciales": 25,
+        "gastosFinales": 15,
+        "impuestoRenta": 4
+      },
+      "middleData": {},
+      "outputData": {},
+      "id": 5
+    },
+    {
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Expansión Industrial",
+        "valorNominal": 2000,
+        "valorComercial": 1950,
+        "moneda": "USD",
+        "nroPeriodos": 36,
+        "frecuenciaPago": "MENSUAL",
+        "tipoTasa": "EFECTIVA",
+        "tasaInteres": 7,
+        "capitalizacion": "Anual",
+        "plazoGraciaTotal": 0,
+        "plazoGraciaParcial": 0,
+        "fechaEmision": "2025-07-06",
+        "gastosIniciales": 25,
+        "gastosFinales": 15,
+        "impuestoRenta": 4
+      },
+      "middleData": {
+        "n": 0,
+        "i": 0,
+        "iAnual": false,
+        "iNominal": false,
+        "k": 0,
+        "cuota": 0,
+        "iAcumulado": 0,
+        "amortAcumulado": 0,
+        "flujoEmisorTotal": 2216.0792755307434,
+        "flujoBonistaTotal": 2216.0792755307434,
+        "gastosIniciales": 0,
+        "gastosFinales": 0,
+        "valorNetoEmisor": 0,
+        "valorNetoBonista": 0,
+        "inpuestoTotalBonista": 0,
+        "tiempoPonderado": 0,
+        "convexidadParcial": 0
+      },
+      "outputData": {
+        "cuotaConstante": 0,
+        "tablaAmortizacion": 0,
+        "tcea": 0,
+        "trea": 0,
+        "duracionMacaulay": 0,
+        "duracionModificada": null,
+        "convexidad": 0,
+        "precioTeorico": 0,
+        "van": 1999.9999999999998,
+        "precio": 1999.9999999999998
+      },
+      "id": 6
     }
   ]
 }

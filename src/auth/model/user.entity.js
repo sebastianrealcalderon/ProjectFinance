@@ -1,14 +1,18 @@
 export class User {
     constructor({
         id="",
+        firstName="",
+        lastName="",
+        role = null,
         email = "",
         password = "",
-        userType = null,
                 }) {
         this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.userType = userType;
+        this.role = role;
     }
 
     static fromJSON(data) {

@@ -8,23 +8,27 @@ export default {
   name: 'LoginComponent',
   data() {
     return {
+      firstName:'',
+      lastName:'',
+      role: '',
       email: '',
       password: '',
-      userType: '',
       errorMessage: ''
     };
   },
   methods: {
     async handleRegister() {
       const newUser = new User({
+        firstName: this.firstName,
+        lastName: this.lastName,
         email: this.email,
         password: this.password,
-        userType: this.userType
+        role: this.role
       });
 
       console.log("Nuevo usuario:", newUser);
 
-      if (!this.email || !this.password || !this.userType) {
+      if (!this.firstName,!this.lastName,!this.email || !this.password || !this.role) {
         console.error("Por favor, complete todos los campos.");
         this.errorMessage = "Por favor, complete todos los campos.";
         return;
@@ -72,8 +76,30 @@ export default {
         <h3>Crear una Cuenta</h3>
         <form @submit.prevent="handleRegister">
           <div class="p-field">
-            <label for="email">Correo Electronico</label>
-            <pv-inputText
+            <label for="firstName">Nombre</label>
+            <input
+                id="firstName"
+                type="text"
+                v-model="firstName"
+                class="p-inputText p-component"
+                placeholder="Nombre"
+                required
+            />
+          </div>
+          <div class="p-field">
+            <label for="lastName">Apellido</label>
+            <input
+                id="lastName"
+                type="text"
+                v-model="lastName"
+                class="p-inputText p-component"
+                placeholder="Apellido"
+                required
+            />
+          </div>
+          <div class="p-field">
+            <label for="email">Correo Electrónico</label>
+            <input
                 id="email"
                 type="text"
                 v-model="email"
@@ -84,7 +110,7 @@ export default {
           </div>
           <div class="p-field">
             <label for="password">Contraseña</label>
-            <pv-inputText
+            <input
                 id="password"
                 type="password"
                 v-model="password"
@@ -94,20 +120,22 @@ export default {
             />
           </div>
           <div class="p-field">
-            <label for="userType">Tipo de usuario</label>
-            <select v-model="userType" class="p-inputText p-component">
+            <label for="role">Tipo de usuario</label>
+            <select v-model="role" class="p-inputText p-component">
+              <option value="emisor">Emisor</option>
               <option value="bonista">Bonista</option>
-              <option value="inversor">Inversor</option>
             </select>
           </div>
           <div class="p-d-flex p-jc-between">
-            <pv-button type="submit" label="Registrarse" class="p-button p-button-primary" />
+            <button type="submit" class="p-button p-button-primary">Registrarse</button>
           </div>
+          <div v-if="errorMessage" class="p-error">{{ errorMessage }}</div>
         </form>
       </div>
     </div>
   </div>
 </template>
+
 
 <style scoped>
 

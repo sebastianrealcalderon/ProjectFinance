@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = "http://localhost:3000";
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 const http = axios.create({
     baseURL: baseUrl,
@@ -11,6 +11,8 @@ export class AuthApiService {
     static  register(user){
         console.log("Datos enviados para el registro:", user)
         return http.post('/users', {
+                firstName: user.firstName,
+                lastName: user.lastName,
                 email: user.email,
                 password: user.password,
                 userType: user.userType
@@ -25,12 +27,11 @@ export class AuthApiService {
             });
     }
 
-    login(email, password, userType) {
+    login(email, password) {
         return http.get('/users', {
             params: {
                 email: email,
                 password: password,
-                userType: userType
             }
         })
             .then(res => {
