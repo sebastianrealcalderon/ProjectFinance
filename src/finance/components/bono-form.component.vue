@@ -50,7 +50,6 @@ export default {
       if (userStr) {
         const user = JSON.parse(userStr);
         this.newBono.userId = user.id; // Asignar el userId desde localStorage
-        this.newBono.nombreBono = "Prueba 3";  // Asignar el nombre del bono
       } else {
         console.warn("No hay usuario logueado, redireccionando al login...");
         this.$router.push({ name: 'login' });  // Redirige si no hay usuario logueado
