@@ -132,20 +132,75 @@ export default {
 
 
 <style scoped>
+/* Animación de entrada para el formulario */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
+/* Animación de la tarjeta de login al cargar */
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Animación para resaltar los campos de input */
+@keyframes inputFocus {
+  0% {
+    transform: scale(1);
+    border-color: #007bff;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Animación de sacudida para los mensajes de error */
+@keyframes shake {
+  0% {
+    transform: translateX(-5px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Estilo general de la pantalla de login */
 .login-container {
   background-image: url("../../assets/fondo-login.png");
-  background-size:cover ;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-
-
+  animation: fadeIn 1s ease-out;
 }
 
+/* Estilo de la tarjeta de login */
 .login-card {
   display: flex;
   border-radius: 8px;
@@ -153,17 +208,19 @@ export default {
   overflow: hidden;
   width: 50%;
   max-width: 800px;
+  animation: slideIn 0.5s ease-out;
 }
 
 .login-card-image {
   flex: 1;
-  background-color:#0C24A1;
+  background-color: #0C24A1;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   padding: 20px;
+  animation: fadeIn 1s ease-out;
 }
 
 .custom-icon {
@@ -187,6 +244,7 @@ h2 {
 h3 {
   font-size: 1.5rem;
   margin-bottom: 20px;
+  color: #0C24A1;
 }
 
 .p-field {
@@ -197,6 +255,7 @@ h3 {
   font-weight: bold;
 }
 
+/* Inputs y selectores */
 .p-field input,
 .p-field select {
   width: 100%;
@@ -205,14 +264,17 @@ h3 {
   border: 1px solid #ddd;
   border-radius: 5px;
   box-sizing: border-box;
+  transition: border-color 0.3s ease, transform 0.3s ease;
 }
 
 .p-field input:focus,
 .p-field select:focus {
   outline: none;
   border-color: #007bff;
+  animation: inputFocus 0.3s ease-out;
 }
 
+/* Estilo para el botón */
 button {
   width: 100%;
   padding: 0.75rem;
@@ -221,12 +283,19 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background-color: #0C24A1;
+  background-color: #0b1a7e;
+  transform: scale(1.05);
 }
 
+/* Estilo de los enlaces de recuperación de contraseña */
+.forgot-password {
+  text-align: center;
+  margin-top: 10px;
+}
 
 .forgot-password a {
   color: #007bff;
@@ -236,4 +305,13 @@ button:hover {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+
+/* Estilo del mensaje de error */
+.p-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  animation: shake 0.5s ease-out;
+}
+
 </style>

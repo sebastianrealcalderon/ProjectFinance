@@ -84,18 +84,16 @@ export default {
 </template>
 
 <style scoped>
-
 .login-container {
   background-image: url("../../assets/fondo-login.png");
-  background-size:cover ;
+  background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-
-
+  animation: fadeIn 1s ease-out; /* Animación al cargar la página */
 }
 
 .login-card {
@@ -105,17 +103,19 @@ export default {
   overflow: hidden;
   width: 50%;
   max-width: 800px;
+  animation: slideIn 0.5s ease-out; /* Deslizar desde un lado */
 }
 
 .login-card-image {
   flex: 1;
-  background-color:#0C24A1;
+  background-color: #0C24A1;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   padding: 20px;
+  animation: fadeInImage 1s ease-out; /* Animación para la imagen */
 }
 
 .custom-icon {
@@ -139,6 +139,7 @@ h2 {
 h3 {
   font-size: 1.5rem;
   margin-bottom: 20px;
+  color: #0C24A1;
 }
 
 .p-field {
@@ -157,12 +158,14 @@ h3 {
   border: 1px solid #ddd;
   border-radius: 5px;
   box-sizing: border-box;
+  transition: border-color 0.3s ease, transform 0.3s ease; /* Animación en el input */
 }
 
 .p-field input:focus,
 .p-field select:focus {
   outline: none;
   border-color: #007bff;
+  transform: scale(1.05); /* Efecto de "enlargement" en el input al foco */
 }
 
 button {
@@ -173,10 +176,12 @@ button {
   color: white;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
-  background-color: #0C24A1;
+  background-color: #0b1a7e;
+  transform: scale(1.05); /* Efecto de aumento cuando el usuario pasa el mouse */
 }
 
 .forgot-password {
@@ -191,5 +196,57 @@ button:hover {
 
 .forgot-password a:hover {
   text-decoration: underline;
+}
+
+.p-error {
+  color: red;
+  font-size: 14px;
+  margin-top: 10px;
+  animation: shake 0.5s ease-out; /* Animación de error */
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInImage {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: translateX(-5px);
+  }
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0);
+  }
 }
 </style>
