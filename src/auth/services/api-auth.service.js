@@ -15,7 +15,7 @@ export class AuthApiService {
                 lastName: user.lastName,
                 email: user.email,
                 password: user.password,
-                userType: user.userType
+                role: user.role
         })
             .then((res) => {
                 console.log("Respuesta del servidor:", res.data);
@@ -28,20 +28,23 @@ export class AuthApiService {
     }
 
     login(email, password) {
-        return http.get('/users', {
-            params: {
-                email: email,
-                password: password,
-            }
+        return http.post('/users/login-request', {  // Enviar credenciales al backend
+            email: email,
+            password: password,
         })
-            .then(res => {
-                if (res.data.length > 0) {
-                    return res.data[0];
+            .then((res) => {
+                if (res.data) {
+                    console.log("Login exitoso", res.data);
+                    // Guardar los datos del usuario en localStorage
+                    localStorage.setItem("user", JSON.stringify(res.data));
+                    return res.data;
                 } else {
                     console.error("Correo o contraseña incorrectos");
+                    throw new Error("Correo o contraseña incorrectos");
                 }
             })
-            .catch(err => {
+            .catch((err) => {
+                console.error("Error al intentar iniciar sesión:", err);
                 throw new Error(err.message || "Hubo un error al intentar iniciar sesión");
             });
     }

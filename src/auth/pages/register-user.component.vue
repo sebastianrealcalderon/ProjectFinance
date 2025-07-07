@@ -10,7 +10,7 @@ export default {
     return {
       firstName:'',
       lastName:'',
-      role: '',
+      role: 'BONISTA',
       email: '',
       password: '',
       errorMessage: ''
@@ -18,50 +18,44 @@ export default {
   },
   methods: {
     async handleRegister() {
+      // Verificar que todos los campos estén completos
+      if (!this.firstName || !this.lastName || !this.email || !this.password || !this.role) {
+        this.errorMessage = "Por favor, complete todos los campos.";
+        return;
+      }
+
+      // Validación básica de email
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      if (!emailPattern.test(this.email)) {
+        this.errorMessage = "El email no es válido.";
+        return;
+      }
+
+      // Validación de la contraseña (mínimo 6 caracteres)
+      if (this.password.length < 6) {
+        this.errorMessage = "La contraseña debe tener al menos 6 caracteres.";
+        return;
+      }
+
+      // Crear un nuevo objeto de usuario
       const newUser = new User({
         firstName: this.firstName,
         lastName: this.lastName,
         email: this.email,
         password: this.password,
-        role: this.role
+        role: this.role,
       });
 
-      console.log("Nuevo usuario:", newUser);
-
-      if (!this.firstName,!this.lastName,!this.email || !this.password || !this.role) {
-        console.error("Por favor, complete todos los campos.");
-        this.errorMessage = "Por favor, complete todos los campos.";
-        return;
-      }
-
-      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailPattern.test(this.email)) {
-        console.error("El email no es válido.");
-        this.errorMessage = "El email no es válido.";
-        return;
-      }
-
-      if (this.password.length < 6) {
-        console.error("La contraseña debe tener al menos 6 caracteres.");
-        this.errorMessage = "La contraseña debe tener al menos 6 caracteres.";
-        return;
-      }
-
       try {
-
-        const response  = await AuthApiService.register(newUser);
-
-        if (response ) {
-          this.$router.push({ name: 'login' });
-        } else {
-          this.errorMessage = "Hubo un error al intentar registrarse.";
+        const response = await AuthApiService.register(newUser);
+        if (response) {
+          this.$router.push({ name: "login" });  // Redirigir a la página de login después del registro
         }
       } catch (error) {
-        console.error("Error en el registro:", error);
-        this.errorMessage = error.message || "Hubo un error al intentar registrarse";
+        this.errorMessage = error.message || "Hubo un error al registrar el usuario";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -122,8 +116,8 @@ export default {
           <div class="p-field">
             <label for="role">Tipo de usuario</label>
             <select v-model="role" class="p-inputText p-component">
-              <option value="emisor">Emisor</option>
-              <option value="bonista">Bonista</option>
+              <option value="EMISOR">EMISOR</option>
+              <option value="BONISTA">BONISTA</option>
             </select>
           </div>
           <div class="p-d-flex p-jc-between">

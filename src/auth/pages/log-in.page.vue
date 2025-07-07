@@ -20,9 +20,9 @@ export default {
         const user = userData ? userData : null;
 
         if (user) {
-          console.log(user);
+          console.log("Login Exitoso",user);
           localStorage.setItem("user", JSON.stringify(user));
-          if (user.role === 'emisor') {
+          if (user.role === 'EMISOR') {
             this.$router.push({ name: 'emisorBonoList' });
           }else {
             this.$router.push({ name: 'bonista-bono-list' });
@@ -49,9 +49,9 @@ export default {
         <h3>Iniciar Sesión</h3>
         <form @submit.prevent="handleLogin">
           <div class="p-field">
-            <label for="fullName">Nombre Completo</label>
+            <label for="fullName">Correo Electronico</label>
             <pv-inputText
-                id="fullName"
+                id="email"
                 type="text"
                 v-model="email"
                 class="p-inputText p-component"
@@ -70,13 +70,6 @@ export default {
                 required
             />
           </div>
-         <!-- <div class="p-field">
-            <label for="userType">Tipo de usuario</label>
-            <select v-model="userType" class="p-inputText p-component">
-              <option value="bonista">Bonista</option>
-              <option value="inversor">Inversor</option>
-            </select>
-          </div>-->
           <div class="p-d-flex p-jc-between">
             <pv-button type="submit" label="Log In" class="p-button p-button-primary" />
           </div>
