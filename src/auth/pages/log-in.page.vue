@@ -23,7 +23,7 @@ export default {
           console.log("Login Exitoso",user);
           localStorage.setItem("user", JSON.stringify(user));
           if (user.role === 'EMISOR') {
-            this.$router.push({ name: 'emisorBonoList' });
+            this.$router.push({ name: 'emisor-bono-list' });
           }else {
             this.$router.push({ name: 'bonista-bono-list' });
           }

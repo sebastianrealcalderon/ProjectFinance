@@ -1,12 +1,16 @@
 <script>
-
 export default {
   name: "bono-metrics",
   props: {
     bono: {
       type: Object,
       required: true
-    }// Recibe los datos del bono como prop
+    } // Recibe los datos del bono como prop
+  },
+  watch: {
+    bono(newBono) {
+      console.log('Nuevo bono recibido en metrics:', newBono);
+    }
   },
   data() {
     return {
@@ -18,6 +22,17 @@ export default {
     selectView(view) {
       this.view = view;
     },
+  },
+
+  computed: {
+    // Computed property to check if outputData exists
+    outputData() {
+      return this.bono.outputData || {};
+    },
+    // Computed property to check if tablaAmortizacion exists
+    tablaAmortizacion() {
+      return this.outputData.tablaAmortizacion || [];
+    }
   }
 };
 </script>
@@ -32,52 +47,47 @@ export default {
       <button @click="selectView('metrics')">Métricas del Bono</button>
     </div>
 
-    <!-- Mostrar flujo de caja solo si bono.outputData y bono.outputData.flujoCaja están disponibles -->
-    <div v-if="view === 'flujoCaja' && bono.outputData && bono.outputData.flujoCaja && bono.outputData.flujoCaja.length > 0">
+    <!-- Mostrar flujo de caja solo si bono.outputData.tablaAmortizacion está disponible -->
+    <div v-if="view === 'flujoCaja' && bono.outputData && bono.outputData.tablaAmortizacion && bono.outputData.tablaAmortizacion.length > 0">
       <h3>Flujo de Caja</h3>
       <table class="table">
         <thead>
         <tr>
-          <th>Periodo</th>
+          <th>Fecha de Pago</th>
           <th>Amortización</th>
           <th>Interés</th>
           <th>Flujo</th>
           <th>Saldo</th>
-          <th>Valor Presente</th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="(flujo, index) in bono.outputData.flujoCaja" :key="index">
-          <td>{{ flujo.periodo }}</td>
-          <td>{{ flujo.amortizacion.toFixed(2) }}</td>
-          <td>{{ flujo.interes.toFixed(2) }}</td>
-          <td>{{ flujo.flujo.toFixed(2) }}</td>
-          <td>{{ flujo.saldo.toFixed(2) }}</td>
-          <td>{{ flujo.valorPresente.toFixed(2) }}</td>
+        <tr v-for="(flujo, index) in bono.outputData.tablaAmortizacion" :key="index">
+          <td>{{ flujo.fechaPago || 'N/A' }}</td>
+          <td>{{ flujo.amortizacion !== undefined ? flujo.amortizacion.toFixed(2) : 'N/A' }}</td>
+          <td>{{ flujo.interes !== undefined ? flujo.interes.toFixed(2) : 'N/A' }}</td>
+          <td>{{ flujo.cuotaPeriodo !== undefined ? (-flujo.cuotaPeriodo).toFixed(2) : 'N/A' }}</td>
+          <!-- Mostrar saldo o 'N/A' si está vacío -->
+          <td>{{ flujo.saldo !== undefined ? flujo.saldo.toFixed(2) : 'N/A' }}</td>
         </tr>
         </tbody>
       </table>
-
-      <!-- Mostrar el Precio del Bono (Valor Presente Total) -->
-      <div v-if="bono.outputData.precioTeorico !== undefined">
-        <h3>Precio del Bono (Valor Presente Total): {{ bono.outputData.precioTeorico.toFixed(2) }}</h3>
-      </div>
+      <h3>📊 Valor del Bono: {{ bono.outputData.precioTeorico ? bono.outputData.precioTeorico.toFixed(2) : 'N/A' }}</h3>
     </div>
 
-    <!-- Mostrar métricas del bono solo si bono.outputData está definido -->
+    <!-- Mostrar métricas del bono -->
     <div v-if="view === 'metrics' && bono.outputData">
       <h3>Métricas del Bono</h3>
       <div class="metric">
-        <strong>Cuota Constante:</strong> {{ bono.outputData.cuotaConstante.toFixed(2) }}
+        <strong>Cuota Constante:</strong> {{ bono.middleData.cuota.toFixed(2) }}
       </div>
       <div class="metric">
         <strong>Precio del Bono:</strong> {{ bono.outputData.precioTeorico.toFixed(2) }}
       </div>
       <div class="metric">
-        <strong>VAN (Valor Actual Neto):</strong> {{ bono.outputData.van.toFixed(2) }}
+        <strong>VAN (Valor Actual Neto):</strong> {{ bono.middleData.flujoTotalEmisor.toFixed(2) }}
       </div>
       <div class="metric">
-        <strong>Duración Macaulay:</strong> {{ bono.outputData.duracionMacaulay.toFixed(2) }}
+        <strong>Duración Macaulay:</strong> {{ bono.outputData.duracionMacualay.toFixed(2) }}
       </div>
       <div class="metric">
         <strong>Duración Modificada:</strong> {{ bono.outputData.duracionModificada ? bono.outputData.duracionModificada.toFixed(2) : "N/A" }}
@@ -93,14 +103,8 @@ export default {
       </div>
     </div>
 
-    <!-- Mostrar un mensaje si no hay datos disponibles -->
-    <div v-else>
-      <p>No hay datos disponibles. Por favor, ingrese todos los datos en el formulario.</p>
-    </div>
-
   </div>
 </template>
-
 
 <style scoped>
 .metrics-container {

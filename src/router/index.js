@@ -15,7 +15,7 @@ const routes = [
     { path: '/inversor', name: 'inversor', component: InversorPage },
     { path: '/register', name: 'register', component: RegisterUser },
     {path: '/analisis-bono', name: 'analisis-bono', component: AnalisisBono},
-    {path: '/emisor-bono-list',name:'emisorBonoList',component: EmisorBonoList},
+    {path: '/emisor-bono-list',name:'emisor-bono-list',component: EmisorBonoList},
     {path: '/bonista-bonos-list', name: 'bonista-bono-list',component:BonistaBonoList },
     {path: '/bonista-bono-detalle/:id',name:'bonista-bono-detalle',component: BonistaBonoDetall},
     { path: '/', name: 'default', redirect: {name: 'login'} },

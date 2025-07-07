@@ -13,39 +13,22 @@
     },
     data() {
       return {
-        bonoGuardado: {},  // Define bonoGuardado en el data
+        bonoGuardado: {},
         isBonoReady:false,
       };
     },
     methods: {
       // Método que maneja el evento bonoGuardado
       handleBonoGuardado(bono) {
+        console.log("Bono recibido en el componente padre:", bono);
         this.bonoGuardado = bono;  // Asigna el bono guardado a bonoGuardado
         this.isBonoReady = true;
+        console.log("Bono guardado:", this.bonoGuardado); // Verifica el valor de bonoGuardado
       },
       // Método para regresar a la vista anterior
       regresar() {
         this.$router.push('/emisor-bono-list');  // Regresa a la página anterior
       },
-      // Emitir Bono
-      emitirBono() {
-        if (!this.isBonoReady) {
-          alert("Por favor, complete los cálculos antes de emitir el bono.");
-          return;
-        }
-        console.log("Emitiendo Bono...");
-        const bonoService=new BonoApiService();
-        bonoService.createBono(this.bonoGuardado)
-            .then((response) => {
-              console.log('Bono emitido correctamente:', response.data);
-              alert('Bono emitido correctamente');
-              this.$router.push('/emisor-bono-list');
-            })
-            .catch((error) => {
-              console.error('Error al emitir el bono:', error);
-              alert('Hubo un error al emitir el bono');
-            });
-      }
     }
   };
 
@@ -58,13 +41,12 @@
       <!-- Título dinámico entre Crear Bono y Actualizar Bono -->
       <h2 class="title">{{ bonoGuardado.id ? 'Actualizar Bono' : 'Crear Bono' }}</h2>
       <!-- Mostrar el botón de emitir bono solo si el bono está listo -->
-      <button v-if="isBonoReady" @click="emitirBono" class="emit-button">Emitir Bono</button>
     </div>
 
     <div class="row">
       <!-- Formulario del Bono -->
       <div class="col-6">
-        <bono-form @bonoGuardado="handleBonoGuardado" />
+        <bono-form @guardarBono="handleBonoGuardado" />
       </div>
 
       <!-- Métricas del Bono -->
@@ -74,7 +56,7 @@
           <p>No se ha guardado ningún bono. Por favor, complete el formulario primero.</p>
         </div>
         <!-- Si bonoGuardado no es null, mostrar el componente de métricas -->
-        <bono-metrics v-else :bono="bonoGuardado" />
+        <bono-metrics v-if="bonoGuardado" :bono="bonoGuardado" />
       </div>
     </div>
   </div>

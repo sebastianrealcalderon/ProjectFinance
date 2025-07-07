@@ -3,257 +3,89 @@ import InputText from 'primevue/inputtext'
 import Dropdown from 'primevue/dropdown'
 import Button from 'primevue/button'
 import {BonoApiService} from "@/finance/services/bono-api.service.js";
+import {Bono} from  "@/finance/model/bono.entity.js"
+import {BonoComplete} from "@/finance/model/bonoComplete.entity.js";
 
 export default {
   name: 'bono-form',
   data() {
     return {
       monedas: [
-        { label: 'USD - Dólar', value: 'USD' },
         { label: 'PEN - Sol', value: 'PEN' },
+        { label: 'USD - Dólar', value: 'USD' },
         { label: 'EUR - Euro', value: 'EUR' }
       ],
-      frecuenciasPago: ['DIARIA', 'MENSUAL', 'TRIMESTRAL', 'ANUAL'],
-      tiposTasa: ['EFECTIVA', 'NOMINAL'],
-      capitalizacionOpciones: ['Anual', 'Semestral', 'Trimestral'],
+      frecuenciasPago: ['DIARIA', 'MENSUAL', 'BIMESTRAL','TRIMESTRAL','CUATRIMESTRAL', 'ANUAL'],
+      tiposTasa: ['NOMINAL','EFECTIVA',],
+      capitalizacionOpciones: ['DIARIA', 'MENSUAL', 'BIMESTRAL','TRIMESTRAL','CUATRIMESTRAL', 'ANUAL'],
+      bonoApiService: new BonoApiService(),
       newBono:{
+        nombreBono: "",
         userId: null,  // userId se obtendrá dinámicamente
         inputData: {
-          nombreBono: "",
           valorNominal: 0,
           valorComercial: 0,
-          moneda: "PEN",
-          nroPeriodos: 0,
-          frecuenciaPago: "ANUAL",
-          tipoTasa: "EFECTIVA",
+          tipoDeMoneda: "PEN",
+          periodos: 1,
+          frecuenciaDePago: "ANUAL",
+          tipoDeTasa: "EFECTIVA",
           tasaInteres: 0,
           capitalizacion: "Anual",
           plazoGraciaTotal: 0,
           plazoGraciaParcial: 0,
           fechaEmision: new Date(),
-          gastosIniciales: 0,
           gastosFinales: 0,
+          gastosIniciales: 0,
           impuestoRenta: 0
-        },
-        middleData:{
-          n:0,
-          i:0.0,
-          iAnual:false,
-          iNominal:false,
-          k:0,
-          cuota:0.0,
-          iAcumulado:0.0,
-          amortAcumulado:0.0,
-          flujoEmisorTotal:0.0,
-          flujoBonistaTotal:0.0,
-          gastosIniciales:0.0,
-          gastosFinales:0.0,
-          valorNetoEmisor:0.0,
-          valorNetoBonista:0.0,
-          inpuestoTotalBonista:0.0,
-          tiempoPonderado:0.0,
-          convexidadParcial:0.0,
-        },
-        outputData:{
-          cuotaConstante:0.0,
-          tablaAmortizacion:0.0,
-          tcea:0.0,
-          trea:0.0,
-          duracionMacaulay:0.0,
-          duracionModificada: null,
-          convexidad:0.0,
-          precioTeorico:0.0,
-          van:0.0,
-          flujoCaja: []
         }
       },
     }
   },
-  created() {
-    // Obtener el usuario logueado desde localStorage
-    const userStr = localStorage.getItem("user");
-    if (userStr) {
-      const user = JSON.parse(userStr);
-      this.newBono.userId = user.id; // Asignar el userId dinámicamente
-    } else {
-      console.warn("No hay usuario logueado, redireccionando al login...");
-      this.$router.push({ name: 'login' });  // Redirige si no hay usuario logueado
-    }
-  },
   methods: {
-    // Método para calcular la tasa efectiva mensual
-    calcularTasaEfectivaMensual(tasaNominal, capitalizacion) {
-      const iNominal = tasaNominal / 100;
-      const n = this.obtenerNumeroDePeriodosPorAno(capitalizacion);
-      return Math.pow(1 + iNominal / n, 1 / 12) - 1;
-    },
-
-    obtenerNumeroDePeriodosPorAno(capitalizacion) {
-      if (capitalizacion === 'Anual') return 1;
-      if (capitalizacion === 'Semestral') return 2;
-      if (capitalizacion === 'Trimestral') return 4;
-      if (capitalizacion === 'Mensual') return 12;
-      return 1;
-    },
-
-    // Método para calcular la cuota
-    calcularCuota() {
-      const tasaMensual = this.calcularTasaEfectivaMensual(this.newBono.inputData.tasaInteres, this.newBono.inputData.capitalizacion);
-      const n = this.newBono.inputData.nroPeriodos;
-      const valorNominal = this.newBono.inputData.valorNominal;
-      return (valorNominal * tasaMensual) / (1 - Math.pow(1 + tasaMensual, -n));
-    },
-
-    // Método para calcular la duración Macaulay
-    calcularDuracionMacaulay() {
-      const cuota = this.newBono.middleData.cuota;
-      const tasaMensual = this.newBono.middleData.i;
-      const n = this.newBono.inputData.nroPeriodos;
-      let duracionMacaulay = 0;
-      let flujoDescontado;
-
-      for (let t = 1; t <= n; t++) {
-        flujoDescontado = cuota / Math.pow(1 + tasaMensual, t);
-        duracionMacaulay += (t * flujoDescontado) / (cuota * n);
-      }
-
-      return duracionMacaulay;
-    },
-
-    // Método para calcular los flujos
-    calcularFlujos() {
-      const cuota = this.calcularCuota();
-      let saldoDeuda = this.newBono.inputData.valorNominal;
-      let flujos = [];
-
-      // Generar los flujos de caja para cada periodo
-      for (let t = 1; t <= this.newBono.inputData.nroPeriodos; t++) {
-        const intereses = saldoDeuda * this.calcularTasaEfectivaMensual(this.newBono.inputData.tasaInteres, this.newBono.inputData.capitalizacion);
-        const amortizacion = cuota - intereses;
-        saldoDeuda -= amortizacion;
-
-        const flujoEmisor = cuota;
-        const flujoBonista = cuota;
-
-        flujos.push({
-          periodo: t,
-          amortizacion,
-          interes: intereses,
-          flujo: cuota,
-          saldo: saldoDeuda,
-          valorPresente: cuota / Math.pow(1 + this.calcularTasaEfectivaMensual(this.newBono.inputData.tasaInteres, this.newBono.inputData.capitalizacion), t)
-        });
-      }
-
-      // Guardamos los flujos de caja en los datos intermedios
-      this.newBono.middleData.flujoEmisorTotal = flujos.reduce((acc, flujo) => acc + flujo.flujo, 0);
-      this.newBono.middleData.flujoBonistaTotal = flujos.reduce((acc, flujo) => acc + flujo.flujo, 0);
-
-      // Guardamos los flujos de caja en outputData
-      this.newBono.outputData.flujoCaja = flujos;
-
-      return flujos;
-    },
-
-    // Método para calcular el VAN
-    calcularVAN() {
-      const flujos = this.calcularFlujos();  // Asegúrate de que 'calcularFlujos' devuelva flujos válidos
-      const tasaMensual = this.calcularTasaEfectivaMensual(this.newBono.inputData.tasaInteres, this.newBono.inputData.capitalizacion);
-      let van = 0;
-
-      // Calcular el VAN usando los flujos de caja
-      for (let t = 0; t < flujos.length; t++) {
-        van += flujos[t].valorPresente;
-      }
-
-      this.newBono.outputData.van = van;
-      return van;
-    },
-
-    // Método para calcular el precio teórico
-    calcularPrecio() {
-      const van = this.calcularVAN();
-      this.newBono.outputData.precioTeorico = van;
-      return van;
-    },
-    calcularConvexidad() {
-      const cuota = this.newBono.middleData.cuota;  // Cuota constante
-      const tasaMensual = this.newBono.middleData.i;  // Tasa efectiva mensual
-      const n = this.newBono.inputData.nroPeriodos;  // Número de periodos
-      let convexidad = 0;
-
-      // Iterar sobre todos los periodos para calcular la convexidad
-      for (let t = 1; t <= n; t++) {
-        const flujoDescontado = cuota / Math.pow(1 + tasaMensual, t);  // Flujo descontado en el periodo t
-        convexidad += (flujoDescontado * Math.pow(t, 2));  // Sumar la parte de la fórmula
-      }
-
-      // Dividir entre el valor de (1 + tasaMensual) elevado a n, para normalizar la convexidad
-      convexidad /= (Math.pow(1 + tasaMensual, n) * n);
-
-      return convexidad;
-    },
-
     // Guardar bono con todos los cálculos
     guardarBono() {
-      // Calcular los datos intermedios (middleData)
-      this.newBono.middleData.n = this.newBono.inputData.nroPeriodos;
-      this.newBono.middleData.i = this.calcularTasaEfectivaMensual(this.newBono.inputData.tasaInteres, this.newBono.inputData.capitalizacion);
-      this.newBono.middleData.iAnual = this.newBono.inputData.tasaInteres;
-      this.newBono.middleData.iNominal = this.newBono.inputData.tipoTasa === "NOMINAL" ? this.newBono.inputData.tasaInteres * 12 : 0;
-      this.newBono.middleData.k = this.obtenerNumeroDePeriodosPorAno(this.newBono.inputData.capitalizacion);
-      this.newBono.middleData.cuota = this.calcularCuota();
+      // Asegúrate de que el emisorId esté disponible en el componente
+      const userStr = localStorage.getItem("user");
 
-      // Asignar los gastos iniciales y finales en middleData
-      this.newBono.middleData.gastosIniciales = this.newBono.inputData.gastosIniciales;
-      this.newBono.middleData.gastosFinales = this.newBono.inputData.gastosFinales;
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        this.newBono.userId = user.id; // Asignar el userId desde localStorage
+        this.newBono.nombreBono = "Prueba 3";  // Asignar el nombre del bono
+      } else {
+        console.warn("No hay usuario logueado, redireccionando al login...");
+        this.$router.push({ name: 'login' });  // Redirige si no hay usuario logueado
+      }
 
-      // Realizar los cálculos de flujos y valores finales
-      this.calcularFlujos();  // Esta función calcula los flujos de caja
-      this.calcularVAN();     // Calcular el VAN (Valor Actual Neto)
-      this.calcularPrecio();  // Calcular el precio del bono (Valor Teórico)
+      // Verifica los valores de emisorId y nombreBono
+      console.log("EmisorId:", this.newBono.userId);  // Deberías ver el ID del usuario aquí
+      console.log("Nombre del Bono:", this.newBono.nombreBono);
 
-      // Cálculos adicionales para outputData
-      this.newBono.outputData.cuotaConstante = this.newBono.middleData.cuota;
+      if (!this.newBono.inputData.frecuenciaDePago) {
+        console.error("Frecuencia de pago no seleccionada.");
+        return;  // Salir si no está definida
+      }
 
-      // 1. TCEA (Tasa de Costo Efectivo Anual)
-      const tcea = Math.pow(1 + this.newBono.middleData.i, 12) - 1;
-      this.newBono.outputData.tcea = tcea;
+      const bono = new Bono({
+        nombreBono: this.newBono.nombreBono, // Asignar el nombre del bono
+        emisorId: this.newBono.userId,  // Asignar el emisorId al bono
+        inputData: this.newBono.inputData, // Otros datos necesarios
+      });
 
-      // 2. TREA (Tasa de Rendimiento Efectivo Anual)
-      this.newBono.outputData.trea = this.newBono.middleData.i * 12;
+      console.log("Datos que se enviarán al backend:", bono.toBackendFormat());
 
-      // 3. Duración Macaulay
-      const duracionMacaulay = this.calcularDuracionMacaulay();
-      this.newBono.outputData.duracionMacaulay = duracionMacaulay;
+      // Llamar al servicio para guardar el bono
+      this.bonoApiService.guardarBono(this.newBono.userId, bono)  // Paso emisorId y bono al servicio
+          .then(response => {
+            console.log("Bono guardado exitosamente:", response);
+            this.$emit("guardarBono",response );// Redirigir a la lista de bonos
+            console.log("Datos de entrada enviados:", response);
+          })
+          .catch(error => {
+            console.error("Error al guardar el bono:", error);
+            this.errorMessage = "Hubo un error al guardar el bono";
+          });
+    },
 
-      // 4. Duración Modificada
-      this.newBono.outputData.duracionModificada = duracionMacaulay / (1 + this.newBono.middleData.i);
-
-      // 5. Convexidad
-      const convexidad = this.calcularConvexidad();
-      this.newBono.outputData.convexidad = convexidad;
-
-      // 6. Precio Teórico
-      this.newBono.outputData.precioTeorico = this.calcularPrecio();
-
-      // 7. VAN (Valor Actual Neto)
-      this.newBono.outputData.van = this.calcularVAN();
-
-      // 8. Flujo de Caja (Emisor y Bonista)
-      const flujos = this.calcularFlujos();
-      this.newBono.outputData.flujoCaja = flujos;  // Guardamos todos los flujos de caja en outputData
-
-      // Calcular valor neto emisor y bonista
-      this.newBono.middleData.valorNetoEmisor = this.newBono.inputData.valorComercial - this.newBono.inputData.gastosIniciales;
-      this.newBono.middleData.valorNetoBonista = this.newBono.inputData.valorNominal - this.newBono.inputData.gastosFinales;
-
-      // Mostrar los detalles en consola
-      console.log("Bono creado:", JSON.stringify(this.newBono, null, 2));
-
-      // Emitir el evento con los resultados
-      this.$emit("bonoGuardado", this.newBono);
-    }
   }
 };
 </script>
@@ -268,7 +100,7 @@ export default {
         <input
             id="nombreBono"
             type="text"
-            v-model="newBono.inputData.nombreBono"
+            v-model="newBono.nombreBono"
             class="p-inputText p-component"
             placeholder="Nombre del Bono"
             required
@@ -281,7 +113,7 @@ export default {
         <input
             id="valorNominal"
             type="number"
-            v-model="newBono.inputData.valorNominal"
+            v-model.number="newBono.inputData.valorNominal"
             class="p-inputText p-component"
             placeholder="Valor Nominal"
             required
@@ -294,7 +126,7 @@ export default {
         <input
             id="valorComercial"
             type="number"
-            v-model="newBono.inputData.valorComercial"
+            v-model.number="newBono.inputData.valorComercial"
             class="p-inputText p-component"
             placeholder="Valor Comercial"
             required
@@ -304,7 +136,7 @@ export default {
       <!-- Moneda -->
       <div class="p-field">
         <label for="moneda">Moneda</label>
-        <select v-model="newBono.inputData.moneda" class="p-inputText p-component">
+        <select v-model="newBono.inputData.tipoDeMoneda" class="p-inputText p-component">
           <option v-for="moneda in monedas" :key="moneda.value" :value="moneda.value">
             {{ moneda.label }}
           </option>
@@ -317,7 +149,7 @@ export default {
         <input
             id="nroPeriodos"
             type="number"
-            v-model="newBono.inputData.nroPeriodos"
+            v-model="newBono.inputData.periodos"
             class="p-inputText p-component"
             placeholder="Número de Periodos"
             required
@@ -327,9 +159,9 @@ export default {
       <!-- Frecuencia de Pago -->
       <div class="p-field">
         <label for="frecuenciaPago">Frecuencia de Pago</label>
-        <select v-model="newBono.inputData.frecuenciaPago" class="p-inputText p-component">
-          <option v-for="frecuencia in frecuenciasPago" :key="frecuencia" :value="frecuencia">
-            {{ frecuencia }}
+        <select v-model="newBono.inputData.frecuenciaDePago" class="p-inputText p-component">
+          <option v-for="item in frecuenciasPago" :key="item" :value="item">
+            {{ item }}
           </option>
         </select>
       </div>
@@ -337,7 +169,7 @@ export default {
       <!-- Tipo de Tasa -->
       <div class="p-field">
         <label for="tipoTasa">Tipo de Tasa</label>
-        <select v-model="newBono.inputData.tipoTasa" class="p-inputText p-component">
+        <select v-model="newBono.inputData.tipoDeTasa" class="p-inputText p-component">
           <option v-for="tipo in tiposTasa" :key="tipo" :value="tipo">
             {{ tipo }}
           </option>
@@ -360,7 +192,7 @@ export default {
         <input
             id="tasaInteres"
             type="number"
-            v-model="newBono.inputData.tasaInteres"
+            v-model.number="newBono.inputData.tasaInteres"
             class="p-inputText p-component"
             placeholder="Tasa de Interés"
             required
@@ -385,7 +217,7 @@ export default {
         <input
             id="plazoGraciaTotal"
             type="number"
-            v-model="newBono.inputData.plazoGraciaTotal"
+            v-model.number="newBono.inputData.plazoGraciaTotal"
             class="p-inputText p-component"
             placeholder="Plazo de gracia total"
         />
@@ -397,18 +229,19 @@ export default {
         <input
             id="plazoGraciaParcial"
             type="number"
-            v-model="newBono.inputData.plazoGraciaParcial"
+            v-model.number="newBono.inputData.plazoGraciaParcial"
             class="p-inputText p-component"
             placeholder="Plazo de gracia parcial"
         />
       </div>
+
       <!-- Gastos Iniciales -->
       <div class="p-field">
         <label for="gastosIniciales">Gastos Iniciales</label>
         <input
             id="gastosIniciales"
             type="number"
-            v-model="newBono.inputData.gastosIniciales"
+            v-model.number="newBono.inputData.gastosIniciales"
             class="p-inputText p-component"
             placeholder="Gastos Iniciales"
         />
@@ -420,7 +253,7 @@ export default {
         <input
             id="gastosFinales"
             type="number"
-            v-model="newBono.inputData.gastosFinales"
+            v-model.number="newBono.inputData.gastosFinales"
             class="p-inputText p-component"
             placeholder="Gastos Finales"
         />
@@ -432,7 +265,7 @@ export default {
         <input
             id="impuestoRenta"
             type="number"
-            v-model="newBono.inputData.impuestoRenta"
+            v-model.number="newBono.inputData.impuestoRenta"
             class="p-inputText p-component"
             placeholder="Impuesto a la Renta"
         />

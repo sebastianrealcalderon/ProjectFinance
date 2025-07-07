@@ -1,5 +1,6 @@
 <script>
 import { BonoApiService } from "@/finance/services/bono-api.service.js";
+import {BonoComplete} from "@/finance/model/bonoComplete.entity.js";
 
 export default {
   name: "bonista-bono-detalle",
@@ -18,9 +19,9 @@ export default {
       const bonoService = new BonoApiService();
       bonoService.getBonoById(id)
           .then((bono) => {
-            this.bono = bono;
             this.isLoading = false;
-            console.log("Bono cargado:", bono);
+            this.bono = new BonoComplete(bono);
+            console.log("Bono cargado:", this.bono);
           })
           .catch((error) => {
             console.error("Error al cargar bono:", error);
@@ -48,7 +49,7 @@ export default {
     <div v-else-if="bono">
       <!-- Mostrar el valor del bono en el título -->
       <section class="section">
-        <h3>📊 Valor del Bono: {{ bono.outputData.precioTeorico.toFixed(2) }}</h3>
+        <h3>📊 Valor del Bono: {{ bono.outputData.precioTeorico ? bono.outputData.precioTeorico.toFixed(2) : 'N/A' }}</h3>
       </section>
 
       <section class="section">
@@ -56,23 +57,24 @@ export default {
         <table class="table">
           <thead>
           <tr>
-            <th>Periodo</th>
+            <th>Fecha de Pago</th>
             <th>Amortización</th>
             <th>Interés</th>
             <th>Flujo</th>
             <th>Saldo</th>
-            <th>Valor Presente</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for="(flujo, index) in bono.outputData.flujoCaja" :key="index">
-            <td>{{ flujo.periodo }}</td>
-            <td>{{ flujo.amortizacion.toFixed(2) }}</td>
-            <td>{{ flujo.interes.toFixed(2) }}</td>
-            <td class="negativo">{{ (-flujo.flujo).toFixed(2) }}</td>
-            <td>{{ flujo.saldo.toFixed(2) }}</td>
-            <td>{{ flujo.valorPresente.toFixed(2) }}</td>
+          <tr v-for="(flujo, index) in bono.outputData.tablaAmortizacion" :key="index">
+            <td>{{ flujo.fechaPago || 'N/A' }}</td>
+            <td>{{ flujo.amortizacion !== undefined ? flujo.amortizacion.toFixed(2) : 'N/A' }}</td>
+            <td>{{ flujo.interes !== undefined ? flujo.interes.toFixed(2) : 'N/A' }}</td>
+            <td>{{ flujo.cuotaPeriodo !== undefined ? (-flujo.cuotaPeriodo).toFixed(2) : 'N/A' }}</td>
+            <!-- Mostrar saldo o 'N/A' si está vacío -->
+            <td>{{ flujo.saldo !== undefined ? flujo.saldo.toFixed(2) : 'N/A' }}</td>
+
           </tr>
+
           </tbody>
         </table>
       </section>
@@ -80,11 +82,8 @@ export default {
       <section class="section metrics">
         <h3>📈 Métricas del Bono</h3>
         <div class="metrics-grid">
-          <div class="card"><strong>Cuota:</strong> {{ bono.outputData.cuotaConstante.toFixed(2) }}</div>
           <div class="card"><strong>Precio:</strong> {{ bono.outputData.precioTeorico.toFixed(2) }}</div>
-          <div class="card"><strong>VAN:</strong> {{ bono.outputData.van.toFixed(2) }}</div>
-          <div class="card"><strong>Dur. Macaulay:</strong> {{ bono.outputData.duracionMacaulay.toFixed(2) }}</div>
-          <div class="card"><strong>Dur. Modificada:</strong> {{ bono.outputData.duracionModificada.toFixed(2) }}</div>
+          <div class="card"><strong>Dur. Macaulay:</strong> {{ bono.outputData.duracionMacualay.toFixed(2) }}</div>
           <div class="card"><strong>Convexidad:</strong> {{ bono.outputData.convexidad.toFixed(2) }}</div>
           <div class="card"><strong>TCEA:</strong> {{ bono.outputData.tcea.toFixed(4) }}</div>
           <div class="card"><strong>TREA:</strong> {{ bono.outputData.trea.toFixed(4) }}</div>

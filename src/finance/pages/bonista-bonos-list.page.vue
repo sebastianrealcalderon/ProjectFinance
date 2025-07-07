@@ -12,6 +12,7 @@ export default {
     this.getBonos();
   },
   methods: {
+
     getBonos() {
       const bonoService = new BonoApiService();
       bonoService.getAllBonos()
@@ -47,8 +48,8 @@ export default {
       </thead>
       <tbody>
       <tr v-for="bono in bonos" :key="bono.id">
-        <td>{{ bono.inputData.nombreBono }}</td>
-        <td>{{ bono.inputData.moneda }}</td>
+        <td>{{ bono.nombreBono }}</td>
+        <td>{{ bono.inputData.tipoDeMoneda }}</td>
         <td>{{ bono.inputData.valorNominal }}</td>
         <td>{{ bono.inputData.valorComercial }}</td>
         <td>{{ bono.inputData.fechaEmision }}</td>

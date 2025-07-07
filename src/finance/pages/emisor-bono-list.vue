@@ -1,5 +1,6 @@
 <script>
 import {BonoApiService} from "@/finance/services/bono-api.service.js";
+import {BonoComplete} from "@/finance/model/bonoComplete.entity.js";
 
 export default {
   name: "emisor-bono-list",
@@ -9,40 +10,44 @@ export default {
       user:null
     }
   },
-  mounted(){
-    this.getLoginUser();
+
+  mounted() {
+    this.getLoginUser();  // Asegúrate de que el usuario se obtenga al montar el componente
   },
+
   methods:{
-    getLoginUser(){
+    getLoginUser() {
       const userStr = localStorage.getItem('user');
-      if(userStr){
-        this.user=JSON.parse(userStr);
-        console.log("Usuario Logueado",this.user);
-        this.getBonos();
-      }else {
-        console.log("No hay usuario Logueado, redireccionando al login ..")
-        this.$router.push('/login');
+      console.log("User del localStorage:", userStr);
+
+      if (userStr) {
+        this.user = JSON.parse(userStr); // Guardamos el usuario en 'user'
+        console.log("Usuario logueado:", this.user);  // Verifica que user tenga el ID correctamente
+        console.log("Emisor ID:", this.user.id); // Verifica el emisorId
+        this.getBonos(this.user.id); // Llamamos a la función para obtener los bonos del usuario
+      } else {
+        console.log("No hay usuario logueado, redireccionando al login ..");
+        this.$router.push('/login');  // Redirige si no hay usuario logueado
       }
     },
-    getBonos(){
-      console.log("UserId del usuario logueado:", this.user.id);
-      if(this.user && this.user.id){
-        const bonoService= new BonoApiService();
-        bonoService.getBonosByUserId(this.user.id)
-        .then(bonos=>{
-          console.log("Bonos Cargados:",bonos);
-          if (bonos.length === 0) {
-            console.warn("No se encontraron bonos para este usuario");
-          }
-          this.bonos = bonos;
-        })
-        .catch(error=>{
-          console.log("Error cargando los bonos",error);
-        })
-      }else {
-        console.log("No se pudo obtener bonos...")
-      }
+
+    getBonos(emisorId) {
+      const bonoService = new BonoApiService();
+      bonoService.getBonosByEmisorId(emisorId)  // Llamamos al servicio pasando el emisorId
+          .then(bonos => {
+            console.log("Bonos Cargados:", bonos);  // Verifica que bonos sea un array y tenga datos
+            if (bonos && bonos.length > 0) {
+              this.bonos = bonos.map(bono => new BonoComplete(bono));  // Asignamos los bonos al array 'bonos'
+            } else {
+              console.warn("No se encontraron bonos para este emisor");
+              this.bonos = [];  // Si no hay bonos, vaciamos la lista
+            }
+          })
+          .catch(error => {
+            console.error("Error cargando los bonos", error);  // Mostramos el error si no se obtienen los bonos
+          });
     },
+
     newBonoButton(){
       this.$router.push('/analisis-bono');
     },
@@ -52,18 +57,14 @@ export default {
           .then(response => {
             console.log("Bono eliminado correctamente:", response);
             // Después de eliminar, actualizamos la lista de bonos
-            this.getBonos();
+            const emisorId = this.user.id; // Obtienes el emisorId del usuario logueado
+            this.getBonos(emisorId);  // Llamas a getBonos pasando el emisorId
             alert("Bono eliminado correctamente.");
           })
           .catch(error => {
             console.log("Error al eliminar el bono", error);
             alert("Hubo un error al eliminar el bono.");
           });
-    },
-    actualizarBono(bono) {
-      // Esta función se llama cuando se desea editar el bono
-      // Debes mostrar el formulario de edición con los datos del bono
-      this.$router.push({ name: 'analisis-bono', params: { bono: bono } });
     },
   }
 }
@@ -96,8 +97,8 @@ export default {
       <tbody>
       <!-- Iterar sobre los bonos y mostrarlos -->
       <tr v-for="bono in bonos" :key="bono.id">
-        <td>{{ bono.inputData.nombreBono }}</td>
-        <td>{{ bono.inputData.moneda }}</td>
+        <td>{{ bono.nombreBono }}</td>
+        <td>{{ bono.inputData.tipoDeMoneda }}</td>
         <td>{{ bono.inputData.valorNominal }}</td>
         <td>{{ bono.inputData.valorComercial }}</td>
         <td>{{ bono.inputData.fechaEmision }}</td>

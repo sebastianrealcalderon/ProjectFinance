@@ -1,64 +1,51 @@
 export class Bono{
     constructor({
                     id=0,
-                    userId= null,
-                    inputData={},
-                    middleData = {},
-                    outputData = {
-                    },
+                    nombreBono= '',
+                    emisorId= null,
+                    inputData = {
+                        valorNominal: 0,
+                        tipoDeMoneda: "",
+                        valorComercial: 0,
+                        periodos: 0,
+                        frecuenciaDePago: "",
+                        tipoDeTasa: "",
+                        tasaInteres: 0,
+                        capitalizacion: "",
+                        plazoGraciaTotal: 0,
+                        plazoGraciaParcial: 0,
+                        fechaEmision: new Date(),
+                        gastosFinales: 0,
+                        gastosIniciales: 0,
+                        impuestoRenta: 0
+                    }
                 }) {
         this.id = id;
-        this.userId = userId;
+        this.emisorId = emisorId;
+        this.nombreBono = nombreBono;
+        this.inputData = inputData;
+    }
 
-        this.inputData = {
-            nombreBono: inputData.nombreBono || "",
-            valorNominal: inputData.valorNominal || 0,
-            valorComercial: inputData.valorComercial || 0,
-            moneda: inputData.moneda || "PEN",
-            nroPeriodos: inputData.nroPeriodos || 0,
-            frecuenciaPago: inputData.frecuenciaPago || "ANUAL",
-            tipoTasa: inputData.tipoTasa || "EFECTIVA",
-            tasaInteres: inputData.tasaInteres || 0,
-            capitalizacion: inputData.capitalizacion || "Anual",
-            plazoGraciaTotal: inputData.plazoGraciaTotal || 0,
-            plazoGraciaParcial: inputData.plazoGraciaParcial || 0,
-            fechaEmision: inputData.fechaEmision || new Date(),
-            gastosIniciales: inputData.gastosIniciales || 0,
-            gastosFinales: inputData.gastosFinales || 0,
-            impuestoRenta: inputData.impuestoRenta || 0
-        };
-        // Datos intermedios (puedes rellenar después)
-        this.middleData = {
-            n:middleData.n||0,
-            i:middleData.i||0.0,
-            iAnual:middleData.iAnual||false,
-            iNominal:middleData.iNominal||false,
-            k:middleData.k||0,
-            cuota:middleData.cuota||0.0,
-            iAcumulado:middleData.iAcumulado||0.0,
-            amortAcumulado:middleData.amortAcumulado||0.0,
-            flujoEmisorTotal:middleData.flujoEmisorTotal||0.0,
-            flujoBonistaTotal:middleData.flujoBonistaTotal||0.0,
-            gastosIniciales:middleData.gastosIniciales||0.0,
-            gastosFinales:middleData.gastosFinales||0.0,
-            valorNetoEmisor:middleData.valorNetoEmisor||0.0,
-            valorNetoBonista:middleData.valorNetoBonista||0.0,
-            inpuestoTotalBonista:middleData.inpuestoTotalBonista||0.0,
-            tiempoPonderado:middleData.tiempoPonderado||0.0,
-            convexidadParcial:middleData.convexidadParcial||0.0,
-        };
-
-        // Datos de salida con defaults
-        this.outputData = {
-            cuotaConstante:outputData.cuotaConstante || 0.0,
-            tablaAmortizacion:outputData.tablaAmortizacion||0.0,
-            tcea: outputData.tcea || null,
-            trea: outputData.trea || null,
-            convexidad: outputData.convexidad || null,
-            duration: outputData.duration || null,
-            duracionModificada: outputData.duracionModificada || null,
-            precioMaximoMercado: outputData.precioMaximoMercado || null,
-            flujoCaja: outputData.flujoCaja || [],
+    toBackendFormat() {
+        return {
+            nombreBono: this.nombreBono,  // El orden de los datos debe coincidir con el del backend
+            emisorId: this.emisorId,
+            inputData: {
+                valorNominal: this.inputData.valorNominal,
+                tipoDeMoneda: this.inputData.tipoDeMoneda,
+                valorComercial: this.inputData.valorComercial,
+                periodos: this.inputData.periodos,
+                frecuenciaDePago: this.inputData.frecuenciaDePago,  // Asegúrate de que esta propiedad esté aquí
+                tipoDeTasa: this.inputData.tipoDeTasa,
+                tasaInteres: this.inputData.tasaInteres/100,
+                capitalizacion: this.inputData.capitalizacion,
+                plazoGraciaTotal: this.inputData.plazoGraciaTotal,
+                plazoGraciaParcial: this.inputData.plazoGraciaParcial,
+                fechaEmision: this.inputData.fechaEmision,
+                gastosFinales: this.inputData.gastosFinales,
+                gastosIniciales: this.inputData.gastosIniciales,
+                impuestoRenta: this.inputData.impuestoRenta/100,
+            }
         };
     }
 }
