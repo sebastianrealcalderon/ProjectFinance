@@ -90,9 +90,6 @@ export default {
         <strong>Duración Macaulay:</strong> {{ bono.outputData.duracionMacualay.toFixed(2) }}
       </div>
       <div class="metric">
-        <strong>Duración Modificada:</strong> {{ bono.outputData.duracionModificada ? bono.outputData.duracionModificada.toFixed(2) : "N/A" }}
-      </div>
-      <div class="metric">
         <strong>Convexidad:</strong> {{ bono.outputData.convexidad.toFixed(2) }}
       </div>
       <div class="metric">
