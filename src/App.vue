@@ -2,27 +2,26 @@
 import Navbar from "@/public/components/toolbar.vue";
 
 export default {
-  name: "App",
   components: {
-    Navbar,  // Componente del navbar
+    Navbar,
   },
   computed: {
-    // Puedes utilizar vuex o localStorage para verificar si el usuario está logueado
-    user() {
-      return JSON.parse(localStorage.getItem("user")) || null;
-    },
-  },
+    showToolbar() {
+      // Mostrar el Toolbar solo si la ruta activa no es "login" ni "register"
+      return this.$route.name !== "login" && this.$route.name !== "register";
+    }
+  }
 };
 
 </script>
 
 <template>
-  <div id="app">
-    <!-- Verifica si hay un usuario logueado, si es así muestra el navbar -->
-    <Navbar v-if="user" />
+  <div>
+    <!-- Mostrar el Toolbar solo si la ruta no es Login ni Register -->
+    <navbar v-if="showToolbar" />
 
-    <!-- Aquí van las vistas dinámicas -->
-    <router-view></router-view>
+    <!-- Renderizar las rutas hijas -->
+    <router-view />
   </div>
 </template>
 
