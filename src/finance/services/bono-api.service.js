@@ -22,9 +22,9 @@ export class BonoApiService {
     }
 
     getBonosByUserId(userId) {
-        return http.get("/bonos")
+        return http.get(`/bonos/emisor/${userId}`)
             .then(response => {
-                return response.data.filter(bono => bono.userId === userId);
+                return response.data;
             })
             .catch(error => {
                 console.error("Error al obtener los bonos:", error);
@@ -56,8 +56,8 @@ export class BonoApiService {
     }
 
     // Crear un nuevo bono
-    createBono(bono) {
-        return http.post("/bonos", bono)
+    createBono(bono, emisorId) {
+        return http.post(`/bonos/${emisorId}`, bono)
             .then(response => {
                 return response.data;
             })
@@ -67,21 +67,9 @@ export class BonoApiService {
             });
     }
 
-    // Actualizar un bono existente
-    updateBono(bonoId, bono) {
-        return http.put(`/bonos/${bonoId}`, bono)
-            .then(response => {
-                return response.data;
-            })
-            .catch(error => {
-                console.error("Error al actualizar el bono:", error);
-                throw new Error("No se pudo actualizar el bono");
-            });
-    }
-
     // Eliminar un bono
     deleteBono(bonoId) {
-        return http.delete(`/bonos/${bonoId}`)
+        return http.delete(`/bonos/delete/${bonoId}`)
             .then(response => {
                 return response.data;
             })
