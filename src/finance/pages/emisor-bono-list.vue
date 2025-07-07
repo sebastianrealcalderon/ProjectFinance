@@ -104,7 +104,6 @@ export default {
         <td>{{ bono.outputData?.tcea }}</td>
         <td>
           <!-- Aquí puedes agregar botones para editar y eliminar -->
-          <button @click="actualizarBono(bono)">Editar</button>
           <button @click="eliminarBono(bono.id)">Eliminar</button>
         </td>
       </tr>
