@@ -32,6 +32,17 @@ export class BonoApiService {
             });
     }
 
+    getAllBonos() {
+        return http.get("/bonos")
+            .then(response => {
+                return response.data;
+            })
+            .catch(error => {
+                console.error("Error al obtener todos los bonos:", error);
+                throw new Error("No se pudieron obtener los bonos");
+            });
+    }
+    
     // Obtener un bono por su ID
     getBonoById(bonoId) {
         return http.get(`/bonos/${bonoId}`)

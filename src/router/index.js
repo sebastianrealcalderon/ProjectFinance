@@ -6,6 +6,8 @@ const Home =()=> import("@/public/components/home.component.vue")
 const InversorPage =()=>import("@/public/components/inversor-prueba.page.vue")
 const RegisterUser =()=>import("@/auth/pages/register-user.component.vue")
 const AnalisisBono =()=> import("@/finance/pages/emisor-bono-create.page.vue")
+const BonistaBonoList =()=>import("@/finance/pages/bonista-bonos-list.page.vue")
+const BonistaBonoDetall =()=>import("@/finance/pages/bonista-bono-detalles.page.vue")
 
 const routes = [
     { path: '/login', name: 'login', component: LogInPage, meta: { title: 'Login' } },
@@ -14,6 +16,8 @@ const routes = [
     { path: '/register', name: 'register', component: RegisterUser },
     {path: '/analisis-bono', name: 'analisis-bono', component: AnalisisBono},
     {path: '/emisor-bono-list',name:'emisorBonoList',component: EmisorBonoList},
+    {path: '/bonista-bonos-list', name: 'bonista-bono-list',component:BonistaBonoList },
+    {path: '/bonista-bono-detalle/:id',name:'bonista-bono-detalle',component: BonistaBonoDetall},
     { path: '/', name: 'default', redirect: {name: 'login'} },
 
 ]

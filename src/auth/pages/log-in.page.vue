@@ -25,7 +25,7 @@ export default {
           if (user.role === 'emisor') {
             this.$router.push({ name: 'emisorBonoList' });
           }else {
-            this.$router.push({ name: 'analisis-bono' });
+            this.$router.push({ name: 'bonista-bono-list' });
           }
         } else {
           this.errorMessage = "Correo o contraseña incorrectos.";

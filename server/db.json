@@ -882,6 +882,155 @@
         ]
       },
       "id": 12
+    },
+    {
+      "userId": 2,
+      "inputData": {
+        "nombreBono": "Bono Prueba x",
+        "valorNominal": 2345,
+        "valorComercial": 1234,
+        "moneda": "PEN",
+        "nroPeriodos": 12,
+        "frecuenciaPago": "ANUAL",
+        "tipoTasa": "EFECTIVA",
+        "tasaInteres": 12,
+        "capitalizacion": "Anual",
+        "plazoGraciaTotal": 0,
+        "plazoGraciaParcial": 0,
+        "fechaEmision": "2025-07-23",
+        "gastosIniciales": 234,
+        "gastosFinales": 342,
+        "impuestoRenta": 12
+      },
+      "middleData": {
+        "n": 12,
+        "i": 0.009488792934583046,
+        "iAnual": 12,
+        "iNominal": 0,
+        "k": 1,
+        "cuota": 207.67804802823952,
+        "iAcumulado": 0,
+        "amortAcumulado": 0,
+        "flujoEmisorTotal": 2492.1365763388744,
+        "flujoBonistaTotal": 2492.1365763388744,
+        "gastosIniciales": 234,
+        "gastosFinales": 342,
+        "valorNetoEmisor": 1000,
+        "valorNetoBonista": 2003,
+        "inpuestoTotalBonista": 0,
+        "tiempoPonderado": 0,
+        "convexidadParcial": 0
+      },
+      "outputData": {
+        "cuotaConstante": 207.67804802823952,
+        "tablaAmortizacion": 0,
+        "tcea": 0.120000000000001,
+        "trea": 0.11386551521499655,
+        "duracionMacaulay": 6.010363464003938,
+        "duracionModificada": 5.953868439224389,
+        "convexidad": 9196.604687330759,
+        "precioTeorico": 2345.0000000000005,
+        "van": 2345.0000000000005,
+        "flujoCaja": [
+          {
+            "periodo": 1,
+            "amortizacion": 185.42682859664228,
+            "interes": 22.251219431597242,
+            "flujo": 207.67804802823952,
+            "saldo": 2159.5731714033577,
+            "valorPresente": 205.72595702080022
+          },
+          {
+            "periodo": 2,
+            "amortizacion": 187.18630537771224,
+            "interes": 20.491742650527282,
+            "flujo": 207.67804802823952,
+            "saldo": 1972.3868660256455,
+            "valorPresente": 203.79221489200987
+          },
+          {
+            "periodo": 3,
+            "amortizacion": 188.96247746963098,
+            "interes": 18.71557055860854,
+            "flujo": 207.67804802823952,
+            "saldo": 1783.4243885560145,
+            "valorPresente": 201.876649169711
+          },
+          {
+            "periodo": 4,
+            "amortizacion": 190.7555032907461,
+            "interes": 16.9225447374934,
+            "flujo": 207.67804802823952,
+            "saldo": 1592.6688852652683,
+            "valorPresente": 199.97908900291577
+          },
+          {
+            "periodo": 5,
+            "amortizacion": 192.5655427626042,
+            "interes": 15.112505265635333,
+            "flujo": 207.67804802823952,
+            "saldo": 1400.103342502664,
+            "valorPresente": 198.0993651465677
+          },
+          {
+            "periodo": 6,
+            "amortizacion": 194.39275732421413,
+            "interes": 13.285290704025384,
+            "flujo": 207.67804802823952,
+            "saldo": 1205.71058517845,
+            "valorPresente": 196.23730994644623
+          },
+          {
+            "periodo": 7,
+            "amortizacion": 196.23730994644626,
+            "interes": 11.440738081793265,
+            "flujo": 207.67804802823952,
+            "saldo": 1009.4732752320037,
+            "valorPresente": 194.39275732421413
+          },
+          {
+            "periodo": 8,
+            "amortizacion": 198.09936514656766,
+            "interes": 9.578682881671844,
+            "flujo": 207.67804802823952,
+            "saldo": 811.3739100854361,
+            "valorPresente": 192.56554276260417
+          },
+          {
+            "periodo": 9,
+            "amortizacion": 199.9790890029158,
+            "interes": 7.698959025323706,
+            "flujo": 207.67804802823952,
+            "saldo": 611.3948210825204,
+            "valorPresente": 190.7555032907461
+          },
+          {
+            "periodo": 10,
+            "amortizacion": 201.87664916971104,
+            "interes": 5.801398858528485,
+            "flujo": 207.67804802823952,
+            "saldo": 409.5181719128093,
+            "valorPresente": 188.96247746963095
+          },
+          {
+            "periodo": 11,
+            "amortizacion": 203.7922148920099,
+            "interes": 3.88583313622963,
+            "flujo": 207.67804802823952,
+            "saldo": 205.7259570207994,
+            "valorPresente": 187.18630537771222
+          },
+          {
+            "periodo": 12,
+            "amortizacion": 205.72595702080022,
+            "interes": 1.9520910074392968,
+            "flujo": 207.67804802823952,
+            "saldo": -8.242295734817162e-13,
+            "valorPresente": 185.42682859664225
+          }
+        ]
+      },
+      "id": 13
     }
   ]
 }
